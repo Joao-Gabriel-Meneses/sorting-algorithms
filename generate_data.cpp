@@ -4,7 +4,6 @@
 #include <ctime>
 #include <algorithm> // Necessário para std::swap
 
-// Enumeração para representar as 4 situações exigidas no PDF
 enum TipoOrganizacao {
     ALEATORIO,
     ORDENADO,
@@ -18,28 +17,24 @@ std::vector<int> gerarConjuntoDeDados(int N, TipoOrganizacao tipo) {
     
     switch (tipo) {
         case ORDENADO:
-            // Dados previamente ordenados [1, 2, 3, ..., N]
             for (int i = 0; i < N; ++i) {
                 vetor[i] = i + 1;
             }
             break;
             
         case INVERSO:
-            // Dados em ordem inversa [N, N-1, ..., 1]
             for (int i = 0; i < N; ++i) {
                 vetor[i] = N - i;
             }
             break;
             
         case ALEATORIO:
-            // Dados totalmente aleatórios
             for (int i = 0; i < N; ++i) {
                 vetor[i] = std::rand() % (N * 10);
             }
             break;
             
         case PARCIALMENTE_ORDENADO:
-            // Primeiro gera o vetor ordenado
             for (int i = 0; i < N; ++i) {
                 vetor[i] = i + 1;
             }
@@ -53,10 +48,9 @@ std::vector<int> gerarConjuntoDeDados(int N, TipoOrganizacao tipo) {
             break;
     }
 
-    return vetor; // Retorna o vetor gerado
+    return vetor; 
 }
 
-// Função para exibir os dados (requisito do menu do PDF)
 void exibirDados(const std::vector<int>& vetor, int limite = 50) {
     std::cout << "Exibindo os primeiros " << limite << " elementos do vetor:\n[ ";
     for (int i = 0; i < vetor.size() && i < limite; ++i) {
@@ -66,7 +60,6 @@ void exibirDados(const std::vector<int>& vetor, int limite = 50) {
 }
 
 int main() {
-    // Inicializa a semente para a geração de números aleatórios
     std::srand(std::time(NULL));
     
     int N = 1000;
@@ -76,10 +69,8 @@ int main() {
     
     std::cout << "Vetor gerado com sucesso! Tamanho: " << dadosOriginais.size() << "\n\n";
 
-    // Mostra os primeiros 50 elementos para você confirmar visualmente a geração
     exibirDados(dadosOriginais, 50);
 
-    // Pausa a tela para o console não fechar imediatamente no Windows
     std::cout << "Pressione Enter para encerrar...";
     std::cin.get(); 
 
