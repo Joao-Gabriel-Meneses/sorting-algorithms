@@ -51,3 +51,55 @@ Para cada execução, o sistema coleta e exibe (via `struct` dedicada) as seguin
 - **Tempo de Execução:** Tempo real gasto para concluir a ordenação.
 
 A saída dos resultados é apresentada em formato de tabela para facilitar a análise visual.
+
+## Estrutura do Projeto
+
+```
+src/
+  estatisticas.h      Struct Estatisticas + convencao unica de metricas
+  gerador.h/.cpp      Geracao dos 4 cenarios de dados
+  selection-sort.h/.cpp
+  insertion-sort.h/.cpp
+  shell-sort.h/.cpp
+  quick-sort.h/.cpp
+  heap-sort.h/.cpp
+  algoritmos.h        Registro dos 5 algoritmos usado pelo menu
+  tabela.h/.cpp       Impressao das tabelas e da matriz comparativa
+  main.cpp            Menu interativo
+test/
+  test-comum.h        Bateria de testes compartilhada
+  gerador-test.cpp
+  selection-sort-test.cpp
+  insertion-sort-test.cpp
+  shell-sort-test.cpp
+  quick-sort-test.cpp
+  heap-sort-test.cpp
+```
+
+Todos os algoritmos expoem a mesma assinatura, o que permite ao menu trata-los
+de forma uniforme:
+
+```cpp
+void nomeSort(int vetor[], int n, Estatisticas& stats);
+```
+
+## Como Compilar e Executar
+
+```bash
+make            # compila o programa principal em bin/ordenacao
+make run        # compila e abre o menu interativo
+make test       # compila e roda os testes de todos os modulos
+make test-heap-sort   # roda apenas os testes de um algoritmo
+make clean      # remove os binarios
+```
+
+## Convencao das Metricas
+
+Para que a tabela comparativa faca sentido, os cinco algoritmos contam da mesma forma:
+
+- **Comparacoes:** cada comparacao entre duas chaves do vetor conta 1. Comparacoes
+  de indice e de controle de laco nao sao contabilizadas.
+- **Movimentacoes:** cada copia de um elemento conta 1, seja para uma posicao do
+  vetor, seja para uma variavel auxiliar. Uma troca conta 3.
+- **Tempo:** tempo de parede da ordenacao, em milissegundos, medido dentro da
+  propria funcao com `std::chrono::high_resolution_clock`.
