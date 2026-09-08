@@ -1,23 +1,32 @@
 #include <iostream>
 
-static int separa (int v[], int p, int r) {
-   int c = v[r]; // pivô
-   int t, j = p;
-   for (int k = p; /*A*/ k < r; ++k)
-      if (v[k] <= c) {
-         t = v[j], v[j] = v[k], v[k] = t;
-         ++j; 
-      } 
-   t = v[j], v[j] = v[r], v[r] = t;
-   return j; 
+long long trocas = 0;
+
+static void Particao(int v[], int esq, int dir, int *i, int *j)
+{ 
+   int x, w;
+   *i = esq; *j = dir;
+   x = v[(*i + *j)/2]; // pivo
+   do
+   { 
+      while (x > v[*i]) (*i)++;
+      while (x < v[*j]) (*j)--;
+      if (*i <= *j)
+      { 
+         w = v[*i]; v[*i] = v[*j]; v[*j] = w;
+         ++trocas;
+         (*i)++; (*j)--;
+      }
+   } while (*i <= *j);
 }
 
-void quicksort (int v[], int p, int r)
-{
-   if (p < r) {                   
-      int j = separa (v, p, r);  
-      quicksort (v, p, j-1);      
-      quicksort (v, j+1, r);     
-   }
+static void Ordena(int v[], int esq, int dir)
+{ 
+   int i, j;
+   Particao(v, esq, dir, &i, &j);
+   if (esq < j) Ordena(v, esq, j);
+   if (i < dir) Ordena(v, i, dir);
 }
 
+void quicksort_hoare(int v[], int n)
+{ if (n > 1) Ordena(v, 0, n-1); }
