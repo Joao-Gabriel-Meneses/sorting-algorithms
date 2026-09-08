@@ -1,5 +1,5 @@
 #include <iostream>
-    #include <chrono>
+#include <chrono>
 
 struct Estatisticas {
     unsigned long long comparacoes;

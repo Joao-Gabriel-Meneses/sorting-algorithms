@@ -28,5 +28,5 @@ static void Ordena(int v[], int esq, int dir)
    if (i < dir) Ordena(v, i, dir);
 }
 
-void quicksort_hoare(int v[], int n)
+void quicksort(int v[], int n)
 { if (n > 1) Ordena(v, 0, n-1); }

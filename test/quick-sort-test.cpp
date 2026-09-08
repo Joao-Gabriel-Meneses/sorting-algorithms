@@ -9,7 +9,7 @@ static void roda(const char *nome, const int origem[], int n)
 
     trocas = 0;
     auto ini = std::chrono::steady_clock::now();
-    quicksort_hoare(v.data(), n);
+    quicksort(v.data(), n);
     auto fim = std::chrono::steady_clock::now();
     double us = std::chrono::duration<double, std::micro>(fim - ini).count();
 
