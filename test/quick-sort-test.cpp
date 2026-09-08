@@ -1,31 +1,81 @@
-#include <iostream>
-#include <chrono>
-#include <vector>
-#include "quick-sort.cpp"
+#include "test-comum.h"
+#include "../src/quick-sort.h"
 
-static void roda(const char *nome, const int origem[], int n)
-{
-    std::vector<int> v(origem, origem + n);
+/* Com pivo central, entradas ordenadas e inversas caem no MELHOR caso do
+   Quick Sort, e nao no pior: as comparacoes ficam na ordem de n log n. */
+void teste_ordenado_nao_e_pior_caso() {
+    const int N = 10000;
 
-    trocas = 0;
-    auto ini = std::chrono::steady_clock::now();
-    quicksort(v.data(), n);
-    auto fim = std::chrono::steady_clock::now();
-    double us = std::chrono::duration<double, std::micro>(fim - ini).count();
+    std::vector<int> ordenado = gerarConjuntoDeDados(N, ORDENADO);
+    std::vector<int> inverso  = gerarConjuntoDeDados(N, INVERSO);
 
-    printf("%-5s trocas=%-5lld tempo=%8.3f us  ", nome, trocas, us);
-    for (int k = 0; k < n; ++k) printf("%i ", v[k]);
-    printf("\n");
+    Estatisticas sOrd, sInv;
+    quickSort(ordenado.data(), N, sOrd);
+    quickSort(inverso.data(),  N, sInv);
+
+    double teto = 10.0 * N * std::log2(static_cast<double>(N));
+    assert(static_cast<double>(sOrd.comparacoes) < teto);
+    assert(static_cast<double>(sInv.comparacoes) < teto);
+
+    std::cout << "[PASSOU] Ordenado/inverso nao sao pior caso (ordenado="
+              << sOrd.comparacoes << ", inverso=" << sInv.comparacoes
+              << " comparacoes, teto=" << static_cast<unsigned long long>(teto) << ")\n";
+}
+
+/* Vetor inteiro de valores repetidos e o caso classico que trava particoes mal
+   feitas: a particao do Wirth precisa dividir o vetor mesmo assim. */
+void teste_todos_iguais_em_larga_escala() {
+    const int N = 20000;
+    std::vector<int> v(N, 7);
+
+    Estatisticas stats;
+    quickSort(v.data(), N, stats);
+
+    assert(std::is_sorted(v.begin(), v.end()));
+    double teto = 10.0 * N * std::log2(static_cast<double>(N));
+    assert(static_cast<double>(stats.comparacoes) < teto);
+
+    std::cout << "[PASSOU] 20.000 elementos iguais (" << stats.comparacoes
+              << " comparacoes)\n";
+}
+
+/* A recursao ocorre apenas na MENOR particao, entao a pilha nao pode estourar
+   nem com vetores grandes ja ordenados. */
+void teste_profundidade_da_pilha() {
+    const int N = 200000;
+    std::vector<int> v = gerarConjuntoDeDados(N, ORDENADO);
+
+    Estatisticas stats;
+    quickSort(v.data(), N, stats);
+
+    assert(std::is_sorted(v.begin(), v.end()));
+
+    std::cout << "[PASSOU] 200.000 elementos ordenados sem estouro de pilha ("
+              << stats.tempoExecucao << " ms)\n";
+}
+
+/* O Quick Sort movimenta muito menos que os algoritmos quadraticos. */
+void teste_poucas_movimentacoes() {
+    const int N = 10000;
+    std::vector<int> v = gerarConjuntoDeDados(N, ALEATORIO);
+
+    Estatisticas stats;
+    quickSort(v.data(), N, stats);
+
+    assert(stats.movimentacoes < static_cast<unsigned long long>(N) * 20);
+
+    std::cout << "[PASSOU] Movimentacoes contidas (" << stats.movimentacoes
+              << " para n=" << N << ")\n";
 }
 
 int main() {
-    int arr1[] = {0};
-    int arr2[] = {33, 10, 440, 0, 100, 45};
-    int arr3[] = {7, 7, 7, 7, 7};
-    int arr4[] = {5, 4, 3, 2, 1};
+    rodarBateriaComum("QUICK SORT", quickSort);
 
-    roda("arr1", arr1, std::size(arr1));
-    roda("arr2", arr2, std::size(arr2));
-    roda("arr3", arr3, std::size(arr3));
-    roda("arr4", arr4, std::size(arr4));
+    teste_ordenado_nao_e_pior_caso();
+    teste_todos_iguais_em_larga_escala();
+    teste_profundidade_da_pilha();
+    teste_poucas_movimentacoes();
+
+    encerrarTestes("Quick Sort");
+    return 0;
 }
