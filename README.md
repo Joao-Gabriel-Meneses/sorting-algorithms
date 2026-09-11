@@ -21,7 +21,7 @@ O foco não é apenas implementar os algoritmos, mas analisar a relação entre 
 - Comparar o desempenho dos algoritmos diante de diferentes cenários de dados (aleatórios, ordenados, inversamente ordenados e parcialmente ordenados).
 - Elaborar uma análise crítica baseada nos resultados experimentais e nos conceitos de complexidade ciclomática (Big-O).
 
-## ⚙️ Algoritmos Implementados
+## Algoritmos Implementados
 
 Os seguintes métodos de ordenação foram implementados neste projeto:
 1. **Selection Sort**
